@@ -68,7 +68,7 @@ class KMR_2x2:
         if show:
             fig, ax = plt.subplots()
         ax.set_title(r'Sample path: $\varepsilon = {0}$'.format(self._epsilon))
-        ax.plot(self.s)
+        ax.plot(self.s, alpha=0.5)
         ax.set_ylim(0, self.N)
         ax.set_xlabel('time')
         ax.set_ylabel('state space')
