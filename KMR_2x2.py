@@ -89,7 +89,7 @@ class KMR_2x2:
 
     def compute_stationary_dist(self):
         """
-        Returns a NumPy array containing the stationary distribution
+        Generates a NumPy array containing the stationary distribution
         """
         self.mu = mc_compute_stationary(self.P)
 
