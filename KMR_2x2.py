@@ -67,31 +67,46 @@ class KMR_2x2:
     def plot_sample_path(self, ax=None, show=True):
         if show:
             fig, ax = plt.subplots()
-        ax.set_title(r'Sample path: $\varepsilon = {0}$'.format(self._epsilon))
         ax.plot(self.s, alpha=0.5)
         ax.set_ylim(0, self.N)
+        ax.set_title(r'Sample path: $\varepsilon = {0}$'.format(self._epsilon))
         ax.set_xlabel('time')
         ax.set_ylabel('state space')
         if show:
             plt.show()
 
-    def plot_emprical_distribution(self, ax=None, show=True):
+    def plot_emprical_dist(self, ax=None, show=True):
         if show:
             fig, ax = plt.subplots()
+        hist, bins = np.histogram(self.s, self.N+1)
+        ax.bar(range(self.N+1), hist, align='center')
         ax.set_title(r'Emprical distribution: $\varepsilon = {0}$'.format(self._epsilon))
-        ax.hist(self.s)
-        ax.set_xlim(0, self.N)
+        ax.set_xlim(-0.5, self.N+0.5)
         ax.set_xlabel('state space')
         ax.set_ylabel('frequency')
         if show:
             plt.show()
 
-    def stationary_distribution(self):
+    def compute_stationary_dist(self):
         """
         Returns a NumPy array containing the stationary distribution
         """
-        mu = mc_compute_stationary(self.P)
-        return mu
+        self.mu = mc_compute_stationary(self.P)
+
+    def get_stationary_dist(self):
+        return self.mu
+
+    def plot_stationary_dist(self, ax=None, show=True):
+        if show:
+            fig, ax = plt.subplots()
+        ax.bar(range(self.N+1), self.mu, align='center')
+        ax.set_xlim(-0.5, self.N+0.5)
+        ax.set_ylim(0, 1)
+        ax.set_title(r'Stationary distribution: $\varepsilon = {0}$'.format(self._epsilon))
+        ax.set_xlabel('state space')
+        ax.set_ylabel('probability')
+        if show:
+            plt.show()
 
 
 if __name__ == '__main__':
