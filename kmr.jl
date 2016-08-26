@@ -1,5 +1,7 @@
 using QuantEcon
 using Distributions
+using PyPlot
+using StatsBase
 
 
 function kmr_markov_matrix_simultaneous(p::Float64, N::Int, epsilon::Float64)
@@ -82,5 +84,58 @@ function simulate_cross_section(kmr::KMR2x2, ts_length::Int;
     return X
 end
 
+function plot_sample_path(kmr::KMR2x2, x::Vector{Int};
+                          ax=Union{}, show_plot=true)
+    if show_plot
+        fig, ax = subplots()
+    end
+    ax[:plot](x, alpha=0.5)
+    ax[:set_ylim](0, kmr.N)
+    ax[:set_title]("Sample path: \$\\varepsilon = $(kmr.epsilon)\$")
+    ax[:set_xlabel]("Time")
+    ax[:set_ylabel]("State")
+    plt[:show]()
+end
+
+function plot_sample_path(kmr::KMR2x2, ts_length::Int; init::Int=rand(0:kmr.N),
+                          ax=Union{}, show_plot=true)
+    x = simulate(kmr, ts_length, init=init)
+    plot_sample_path(kmr, x, ax=ax, show_plot=show_plot)
+end
+
+
+function plot_empirical_dist(kmr::KMR2x2, x::Vector{Int};
+                             ax=Union{}, show_plot=true)
+    h = fit(Histogram, x, 0:kmr.N+1, closed=:left)
+    if show_plot
+        fig, ax = subplots()
+    end
+    ax[:bar](0:kmr.N, h.weights, align="center")
+    ax[:set_title]("Empirical distribution: \$\\varepsilon = $(kmr.epsilon)\$")
+    ax[:set_xlim](-0.5, kmr.N+0.5)
+    ax[:set_xlabel]("State")
+    ax[:set_ylabel]("Frequency")
+    plt[:show]()
+end
+
+function plot_empirical_dist(kmr::KMR2x2, ts_length::Int;
+                             init::Int=rand(0:kmr.N),
+                             ax=Union{}, show_plot=true)
+    x = simulate(kmr, ts_length, init=init)
+    plot_empirical_dist(kmr, x, ax=ax, show_plot=show_plot)
+end
+
 
 stationary_dist(kmr::KMR2x2) = stationary_distributions(kmr.mc)[1]
+
+function plot_stationary_dist(kmr::KMR2x2; ax=Union{}, show_plot=true)
+    if show_plot
+        fig, ax = subplots()
+    end
+    ax[:bar](0:kmr.N, stationary_dist(kmr), align="center")
+    ax[:set_title]("Stationary distribution: \$\\varepsilon = $(kmr.epsilon)\$")
+    ax[:set_xlim](-0.5, kmr.N+0.5)
+    ax[:set_xlabel]("State")
+    ax[:set_ylabel]("Probability")
+    plt[:show]()
+end
