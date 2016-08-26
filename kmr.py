@@ -1,4 +1,3 @@
-from __future__ import division
 import numpy as np
 from scipy.stats import binom
 import matplotlib.pyplot as plt
@@ -32,7 +31,7 @@ def kmr_markov_matrix_sequential(p, N, epsilon):
     return P
 
 
-class KMR2x2(object):
+class KMR2x2:
 
     def __init__(self, p, N, epsilon, revision='simultaneous'):
 
@@ -107,7 +106,7 @@ class KMR2x2(object):
         if show:
             plt.show()
 
-    def plot_emprical_dist(self, x=None, ts_length=10**4, init=None,
+    def plot_empirical_dist(self, x=None, ts_length=10**4, init=None,
                            ax=None, show=True):
         if x is None:
             x = self.simulate(ts_length, init)
@@ -116,7 +115,7 @@ class KMR2x2(object):
             fig, ax = plt.subplots()
         hist, bins = np.histogram(x, self.N+1)
         ax.bar(range(self.N+1), hist, align='center')
-        ax.set_title(r'Emprical distribution: $\varepsilon = {0}$'
+        ax.set_title(r'Empirical distribution: $\varepsilon = {0}$'
                      .format(self.epsilon))
         ax.set_xlim(-0.5, self.N+0.5)
         ax.set_xlabel('State')
