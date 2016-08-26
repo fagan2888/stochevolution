@@ -71,11 +71,13 @@ function epsilon!(kmr::KMR2x2, epsilon)
 end
 
 
-QuantEcon.simulation(kmr::KMR2x2, ts_length::Int, init::Int=rand(0:kmr.N)) =
-    value_simulation(kmr.mc, ts_length, init+1)
+QuantEcon.simulate(kmr::KMR2x2, ts_length::Int; init::Int=rand(0:kmr.N)) =
+    simulate(kmr.mc, ts_length, init=init+1)
 
-QuantEcon.simulate(kmr::KMR2x2, ts_length::Int, init::Int; num_reps::Int=1) =
-    simulate_values(kmr.mc, ts_length, init+1; num_reps=num_reps)
-
-QuantEcon.simulate(kmr::KMR2x2, ts_length::Int; num_reps::Int=1) =
-    simulate_values(kmr.mc, ts_length; num_reps=num_reps)
+function simulate_cross_section(kmr::KMR2x2, ts_length::Int;
+                                init::Vector{Int}=rand(0:kmr.N, num_reps),
+                                num_reps::Int=1)
+    X = Array(Int, ts_length, num_reps)
+    simulate!(X, kmr.mc, init=init.+1)
+    return X
+end
