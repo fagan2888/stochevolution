@@ -81,3 +81,6 @@ function simulate_cross_section(kmr::KMR2x2, ts_length::Int;
     simulate!(X, kmr.mc, init=init.+1)
     return X
 end
+
+
+stationary_dist(kmr::KMR2x2) = stationary_distributions(kmr.mc)[1]
